@@ -6,13 +6,29 @@ const HubspotAPI = require("./hubspot");
 const { Config, Secret, Context, isTruthy } = require("./lib");
 
 async function run() {
-  const context = Context.from_env();
+  const context = Context.from_env(); //this is just for the purposes of the console.log.  I also think, given the .env it would just be an empty object so I don't see the point of it here.  Presumably it's more important if you have put context in the .env
   const secret = Secret.from_env();
+  /*
+        {
+            aws_secret_access_key= client_aws_secret_key
+            aws_key_id=client_aws_key_id
+            hubspot_api_key= client_hubspot_api_key
+        }
+        */
   const config = Config.from_env();
+  /*
+         {
+             s3_bucket_name=client_user_bucket,
+             s3_file_name= client_file_name,
+             make_contact= true
+             make_company=true
+
+         }
+        */
 
   console.error(`This run is in mode: ${context["run_mode"]}`);
 
-  //an instance of the hubspotAPI class is an object that has the hubspot client, the provided config, the provided secret, the apiKey (which is determined by the secret).  It also has a create method on it, which is used to make new companies or contacts in hubspot.
+  //an instance of the hubspotAPI class is an object that has the hubspot client, the provided config, the provided secret, the apiKey (which is determined by the secret).  This class also has a create method, which is used to make new companies or contacts in hubspot.
   const hsAPI = new HubspotAPI(config, secret);
 
   try {
@@ -27,7 +43,7 @@ async function run() {
     const [meta, ...records] = parseCSV(data, {
       skip_empty_lines: true,
     });
-    //for each rown in the CSV, if it is a contact put a contact in hubspot.
+    //for each row in the CSV, if it is a contact put a contact in hubspot.
     records.map(async (record) => {
       if (isTruthy(config["make_contact"])) {
         //this next line should maybe be console.log rather than console.error?
