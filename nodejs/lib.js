@@ -1,3 +1,5 @@
+//I guess this function is needed because they've found people will put all kinds of weird stuff in the .env for "make contact" or "make company"
+//this function makes sure that all things are clearly intended to be some version of "true" will register as such, but things like the stirng "false", "n", "f" will not be true
 function isTruthy(value) {
   return ["true", "1", "t", "y", "yes"].includes(value);
 }

@@ -45,16 +45,19 @@ async function run() {
     });
     //for each row in the CSV, if it is a contact put a contact in hubspot.
     records.map(async (record) => {
+      //make_contact is set to true in .env, so this will always be true.... unless you change what is in the .env and you wouldn't be able to change that part way through invoking this
       if (isTruthy(config["make_contact"])) {
         //this next line should maybe be console.log rather than console.error?
         console.error("Creating Contact", record);
         try {
+          //create a is a method on the hubspot class instance.  Making this a method makes it far less cluttered in this file.
           await hsAPI.create("contacts", record);
         } catch (err) {
           console.error("ERROR: Unable to create contact:", record);
         }
       }
       //for each rown in the CSV, if it is a company put a company in hubspot.
+      //make_company is set to true in .env, so this will always be true.... unless you change what is in the .env  and you wouldn't be able to change that part way through invoking this
       if (isTruthy(config["make_company"])) {
         //this next line should maybe be console.log rather than console.error?
         console.error("Creating Company:", record);
